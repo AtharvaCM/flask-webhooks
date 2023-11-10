@@ -23,9 +23,33 @@ def openai_webhook():
     component_name = data.get('component', {}).get('name', 'Component')
     new_status = data.get('component_update', {}).get('new_status', 'status')
     
-    # Format the message for Discord
+    # Create an embed message for Discord
     discord_message = {
-        "content": f"{component_name} status updated: {new_status}\n{status_description}"
+        "username": "English BT Bot",
+        "avatar_url": "https://media.licdn.com/dms/image/D5603AQGJODmUg3akSw/profile-displayphoto-shrink_100_100/0/1689862148982?e=1704931200&v=beta&t=qHp1mmsBg6d97LoAg6KxwXFvzq6Y62WIJjL17jMcppo",
+        "embeds": [
+            {
+                "title": "Status Update",
+                "description": status_description,
+                "color": 0x00ff00 if new_status == "operational" else 0xff0000,
+                "fields": [
+                    {
+                        "name": "Component",
+                        "value": component_name,
+                        "inline": True
+                    },
+                    {
+                        "name": "New Status",
+                        "value": new_status,
+                        "inline": True
+                    }
+                ],
+                "footer": {
+                    "text": "OpenAI Status Update"
+                },
+                "timestamp": data.get('component_update', {}).get('created_at')
+            }
+        ]
     }
 
     # Post the message to Discord
